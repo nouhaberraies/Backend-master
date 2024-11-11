@@ -1,0 +1,57 @@
+pipeline {
+    agent any  
+
+    tools {
+        maven 'maven'      }
+
+    stages {
+        stage('Clean up') {
+            steps {
+                
+                deleteDir()
+            }
+        }
+
+        stage('Clone repo') {
+            steps {
+                
+                sh 'git clone https://github.com/nouhaberraies/Backend-master'
+            }
+        }
+
+        stage('Generate backend image') {
+            steps {
+                dir('Backend-master/backend') {
+                    
+                    sh 'mvn clean install'
+                    sh 'docker build -t backend .'
+                }
+            }
+        }
+
+        stage('Run docker compose') {
+            steps {
+                dir('Backend-master/backend') {
+                    sh 'docker-compose up -d'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            // Action après succès du pipeline
+            echo 'Pipeline terminé avec succès!'
+        }
+
+        failure {
+            // Action en cas d’échec du pipeline
+            echo 'Le pipeline a échoué.'
+        }
+
+        always {
+            // Action qui s’exécute toujours (en cas de succès ou d’échec)
+            echo 'Nettoyage ou autre action à effectuer.'
+        }
+    }
+}
