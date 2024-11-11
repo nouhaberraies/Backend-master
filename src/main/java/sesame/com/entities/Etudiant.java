@@ -21,7 +21,7 @@ public class Etudiant {
 		
 		public Etudiant() {
 			super();
-			// TODO Auto-generated constructor stub
+
 		}
 		public Long getIdEtudiant() {
 			return idEtudiant;
